@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🍒 Dolcetto - Paula Roa</title>
+  <meta name="description" content="Tienda Dolcetto - flanes y postres artesanales" />
+
+  <style>
+    /* ==== PALETA: Cherry + Marrón ==== */
+    :root{
+      --cherry-900: #7f0715;   /* oscuro */
+      --cherry-600: #c81f2f;   /* principal (acento) */
+      --cherry-400: #e25760;   /* suave */
+      --brown-800: #4a2f24;    /* marrón profundo */
+      --brown-600: #6b3e2b;
+      --bg: #fff6f6;
+      --card: #fff;
+      --muted: #6b6563;
+      --glass: rgba(255,255,255,0.6);
+      --success: #28a745;
+      --danger: #dc3545;
+      --shadow: 0 6px 18px rgba(75,34,28,0.08);
+    }
+
+    /* Reset / base */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, #fffaf9 0%, #fff6f6 100%);
+      color: var(--brown-800);
+      padding:20px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    header{
+      background: linear-gradient(90deg,var(--cherry-400),var(--cherry-600));
+      color: white;
+      padding:18px;
+      border-radius:12px;
+      box-shadow: var(--shadow);
+      display:flex;
+      gap:16px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    header h1{margin:0;font-size:1.25rem;display:flex;align-items:center;gap:10px}
+    header p{margin:0;opacity:0.95;font-size:0.95rem}
+
+    .wrap{
+      max-width:1100px;
+      margin:20px auto 60px;
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:20px;
+      align-items:start;
+    }
+
+    /* filtros y explay */
+    .controls{display:flex;gap:12px;align-items:center}
+    label{font-size:0.95rem;color:var(--brown-800)}
+    select#categoria{
+      padding:8px 10px;border-radius:8px;border:1px solid rgba(75,34,28,0.12);
+      background:var(--card); font-size:0.95rem;
+    }
+
+    /* grid productos */
+    #productos{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:14px;
+    }
+
+    .producto{
+      background:var(--card);
+      border-radius:12px;
+      padding:12px;
+      box-shadow: var(--shadow);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      border:1px solid rgba(75,34,28,0.06);
+    }
+    .producto img{
+      width:100%;
+      height:180px;
+      object-fit:cover;
+      border-radius:10px;
+      background: linear-gradient(90deg, #f8eaea, #fff);
+    }
+    .producto h3{margin:0;font-size:1rem;color:var(--brown-800)}
+    .producto p{margin:0;color:var(--muted);font-size:0.95rem}
+    .producto .precio{font-weight:600;color:var(--cherry-900)}
+
+    .producto .btns{margin-top:auto;display:flex;gap:8px;align-items:center}
+    .button{
+      flex:1;
+      background:var(--cherry-600);
+      color:white;
+      border:none;
+      padding:8px 10px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .button:active{transform:translateY(1px)}
+    .button.secondary{
+      background:transparent;
+      border:1px solid rgba(75,34,28,0.08);
+      color:var(--brown-800);
+    }
+
+    /* carro */
+    .carrito{
+      background: linear-gradient(180deg, rgba(255,255,255,0.85), #fff);
+      border-radius:12px;
+      padding:16px;
+      border:1px solid rgba(75,34,28,0.06);
+      box-shadow: var(--shadow);
+      position:sticky;
+      top:20px;
+    }
+    .carrito h2{margin:0 0 8px 0;color:var(--cherry-900);display:flex;align-items:center;gap:8px}
+    #lista-carrito{list-style:none;padding:0;margin:8px 0 12px;max-height:360px;overflow:auto}
+    #lista-carrito li{
+      display:flex;justify-content:space-between;align-items:center;gap:8px;
+      padding:8px;border-radius:8px;margin-bottom:8px;border:1px solid rgba(75,34,28,0.04);
+      background: linear-gradient(90deg,#fff,#fff6f6);
+    }
+    #lista-carrito li .meta{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+    .qty{display:flex;align-items:center;gap:6px}
+    .qty button{
+      padding:6px 8px;border-radius:6px;border:1px solid rgba(75,34,28,0.06);background:transparent;cursor:pointer;
+    }
+    .remove{background:var(--danger);color:white;border:none;padding:6px 8px;border-radius:8px;cursor:pointer}
+
+    .totales{border-top:1px dashed rgba(75,34,28,0.06);padding-top:12px;margin-top:10px}
+    .totales p{display:flex;justify-content:space-between;margin:6px 0;font-weight:600}
+    .totales .muted{font-weight:400;color:var(--muted)}
+
+    .acciones{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+    .vaciar{background:var(--danger);color:white;border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
+    .finalizar{background:var(--cherry-900);color:white;border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
+
+    .pago{margin-top:12px;background:linear-gradient(180deg,#fff,#fff6f6);padding:10px;border-radius:8px;border:1px dashed rgba(75,34,28,0.04)}
+    .hint{font-size:0.9rem;color:var(--muted);margin-top:8px}
+
+    /* Responsive */
+    @media (max-width:980px){ .wrap{grid-template-columns:1fr} .carrito{position:static} }
+  </style>
+</head>
+<body>
+  <header role="banner" aria-label="Cabecera tienda">
+    <h1>🍽️ Dolcetto - Paula Roa</h1>
+    <p>Flanes artesanales — hechos con amor ❤️</p>
+  </header>
+
+  <div class="wrap" role="main">
+    <!-- COLUMNA PRODUCTOS -->
+    <section>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px;flex-wrap:wrap">
+        <div class="controls" aria-hidden="false">
+          <label for="categoria">Filtrar por categoría:</label>
+          <select id="categoria" name="categoria" aria-label="Filtrar por categoría">
+            <option value="todos">Todos</option>
+            <option value="clásicos">Flanes clásicos</option>
+            <option value="chocolate">Chocolate</option>
+            <option value="frutas">Frutos & especiales</option>
+          </select>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:center">
+          <div style="font-size:0.95rem;color:var(--muted)">Ver: <strong id="contador-productos">0</strong> productos</div>
+          <button id="btn-reset-filtro" class="button secondary" title="Mostrar todos">Restablecer</button>
+        </div>
+      </div>
+
+      <div id="productos" aria-live="polite" aria-busy="false"></div>
+    </section>
+
+    <!-- COLUMNA CARRITO -->
+    <aside class="carrito" aria-label="Carrito de compras">
+      <h2>🧾 Carrito</h2>
+      <p class="hint">Productos en carrito: <strong id="cantidad-carrito">0</strong></p>
+
+      <ul id="lista-carrito" aria-live="polite"></ul>
+
+      <div class="totales" aria-hidden="false">
+        <p class="muted">Subtotal: <span id="subtotal-text">$0.00</span></p>
+        <p class="muted">Descuento: <span id="descuento-text">$0.00</span></p>
+        <p class="muted">Impuestos: <span id="impuestos-text">$0.00</span></p>
+        <p>Total: <strong id="total-text">$0.00</strong></p>
+      </div>
+
+      <div class="acciones">
+        <button id="btn-vaciar" class="vaciar" type="button">🧼 Vaciar</button>
+        <button id="btn-finalizar" class="finalizar" type="button">✅ Finalizar</button>
+      </div>
+
+      <div class="pago" aria-live="polite">
+        <h3 style="margin:0 0 8px 0">💳 Método de pago (sandbox)</h3>
+        <div id="paypal-button-container" style="margin-top:6px;display:none"></div>
+        <p class="hint">⚠️ PayPal sandbox: se usa client-id de pruebas. Solo visible cuando el total &gt; 0.</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- SDK PayPal (sandbox). Cambia 'sb' por tu client-id de pruebas si quieres probar pagos reales en sandbox -->
+  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD&components=buttons,funding-eligibility"></script>
+
+  <script>
+    /****** CONFIG ******/
+    const MONEDA = 'USD';      // para Intl.NumberFormat y PayPal (usar USD para sandbox por compatibilidad)
+    const LOCALE = 'es-CO';
+    const TAX_RATE = 0.00;     // aplica impuestos si corresponde (ej: 0.19)
+    const DESCUENTO = 0.00;    // descuento fijo sobre subtotal
+
+    /****** DATASET (usé tus productos originales, no modifiqué rutas ni nombres) ******/
+    const productos = [
+      { id: 1, nombre: "Flan maracuya con cereza", precio: 25.00, categoria: "frutas", img: "https://ladulcereposteria.co/cdn/shop/files/postres-muss-maracuya.png?v=1691001716" },
+      { id: 2, nombre: "Flan frutos rojos", precio: 18.00, categoria: "frutas", img: "https://www.dispropancaribe.com/cdn/shop/products/110330-2.jpg?v=1647027574&width=713" },
+      { id: 3, nombre: "Flan chocolate", precio: 30.00, categoria: "chocolate", img: "https://lagrancosecha.com.co/wp-content/uploads/2025/09/Copa-Veneciana-300x300.webp" },
+      { id: 4, nombre: "Flan Chocobencito", precio: 18.00, categoria: "chocolate", img: "https://lagrancosecha.com.co/wp-content/uploads/2025/09/Chocobencito-300x300.webp" },
+      { id: 5, nombre: "Flan de fresa", precio: 22.00, categoria: "clásicos", img: "https://www.ecoplastcentro.com/fotos/22827.jpg" }
+    ];
+
+    /****** ESTADO (carrito con Map) ******/
+    let carrito = new Map();
+
+    const $ = {
+      productos: document.getElementById('productos'),
+      lista: document.getElementById('lista-carrito'),
+      subtotal: document.getElementById('subtotal-text'),
+      impuestos: document.getElementById('impuestos-text'),
+      descuento: document.getElementById('descuento-text'),
+      total: document.getElementById('total-text'),
+      cantidad: document.getElementById('cantidad-carrito'),
+      selectCat: document.getElementById('categoria'),
+      contadorProductos: document.getElementById('contador-productos'),
+      btnVaciar: document.getElementById('btn-vaciar'),
+      btnFinal: document.getElementById('btn-finalizar'),
+      paypal: document.getElementById('paypal-button-container'),
+      btnResetFiltro: document.getElementById('btn-reset-filtro')
+    };
+
+    const money = new Intl.NumberFormat(LOCALE, { style: 'currency', currency: MONEDA });
+
+    /****** LOCALSTORAGE helpers ******/
+    function persist() {
+      try {
+        localStorage.setItem('dolcetto_carrito', JSON.stringify(Array.from(carrito.entries())));
+      } catch (e) { console.warn('No se pudo persistir carrito', e); }
+    }
+    function load() {
+      try {
+        const raw = localStorage.getItem('dolcetto_carrito');
+        if (raw) carrito = new Map(JSON.parse(raw));
+      } catch (e) { console.warn('Error cargando carrito',e); }
+    }
+    function persistFiltro(cat){
+      try { localStorage.setItem('dolcetto_filtro', String(cat)); } catch(e){}
+    }
+    function loadFiltro(){
+      try {
+        const f = localStorage.getItem('dolcetto_filtro');
+        if (f) $.selectCat.value = f;
+      } catch(e){}
+    }
+
+    /****** RENDER PRODUCTOS ******/
+    function renderProductos(list){
+      $.productos.setAttribute('aria-busy','true');
+      $.productos.innerHTML = '';
+      if (!Array.isArray(list) || list.length === 0){
+        $.productos.innerHTML = '<div style="padding:12px;background:#fff;border-radius:8px;text-align:center">No se encontraron productos.</div>';
+        $.contadorProductos.textContent = 0;
+        $.productos.setAttribute('aria-busy','false');
+        return;
+      }
+
+      list.forEach(p => {
+        const art = document.createElement('article');
+        art.className = 'producto';
+        art.innerHTML = `
+          <img src="${p.img}" alt="${p.nombre}" loading="lazy">
+          <h3>${p.nombre}</h3>
+          <p class="precio">${money.format(Number(p.precio||0))}</p>
+          <div style="display:flex;gap:8px" class="btns">
+            <button class="button" data-add="${p.id}">Agregar</button>
+            <button class="button secondary" data-view="${p.id}" title="Ver detalles">Detalles</button>
+          </div>
+        `;
+        // image error fallback (no modificar rutas originales)
+        const img = art.querySelector('img');
+        img.addEventListener('error', ()=> {
+          img.src = 'https://via.placeholder.com/400x300?text=Imagen+no+disponible';
+          img.alt = p.nombre + ' (imagen no disponible)';
+        });
+        $.productos.appendChild(art);
+      });
+
+      $.contadorProductos.textContent = list.length;
+      $.productos.setAttribute('aria-busy','false');
+    }
+
+    /****** FILTRO ******/
+    function filtrar(){
+      const sel = $.selectCat.value;
+      persistFiltro(sel);
+      const data = sel === 'todos' ? productos : productos.filter(p => String(p.categoria) === sel);
+      renderProductos(data);
+    }
+
+    /****** TOTALES ******/
+    function calcularTotales(){
+      const arr = Array.from(carrito.values());
+      const subtotal = arr.reduce((s,i) => s + Number(i.precio||0) * Number(i.cantidad||0), 0);
+      const descuento = Math.min(DESCUENTO, subtotal);
+      const base = subtotal - descuento;
+      const impuestos = +(base * TAX_RATE);
+      const total = +(base + impuestos);
+      const cantidad = arr.reduce((s,i)=> s + Number(i.cantidad||0),0);
+      return { subtotal, descuento, impuestos, total, cantidad };
+    }
+
+    function pintarCarrito(){
+      $.lista.innerHTML = '';
+      if (carrito.size === 0){
+        $.lista.innerHTML = '<li style="text-align:center;color:var(--muted)">El carrito está vacío</li>';
+      } else {
+        carrito.forEach(item => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <div class="meta">
+              <div style="font-weight:700">${item.nombre}</div>
+              <div style="font-size:0.92rem;color:var(--muted)">${money.format(item.precio)} x ${item.cantidad}</div>
+            </div>
+            <div class="qty" role="group" aria-label="Cantidad">
+              <button data-dec="${item.id}" aria-label="Disminuir">−</button>
+              <span aria-live="polite">${item.cantidad}</span>
+              <button data-inc="${item.id}" aria-label="Aumentar">+</button>
+              <button class="remove" data-del="${item.id}" aria-label="Eliminar">❌</button>
+            </div>
+          `;
+          $.lista.appendChild(li);
+        });
+      }
+
+      const { subtotal, descuento, impuestos, total, cantidad } = calcularTotales();
+      $.subtotal.textContent = money.format(subtotal);
+      $.descuento.textContent = money.format(descuento);
+      $.impuestos.textContent = money.format(impuestos);
+      $.total.textContent = money.format(total);
+      $.cantidad.textContent = cantidad;
+
+      // PayPal: mostrar si total>0
+      $.paypal.style.display = total > 0 ? 'block' : 'none';
+      renderPayPal(total);
+    }
+
+    /****** OPERACIONES CARRITO (Map) ******/
+    function add(id){
+      const idn = Number(id);
+      const prod = productos.find(p => p.id === idn);
+      if (!prod) return alert('Producto no encontrado. Revisa el array de productos.');
+      const it = carrito.get(idn);
+      if (it) it.cantidad = Number(it.cantidad) + 1;
+      else carrito.set(idn, { ...prod, cantidad: 1 });
+      persist(); pintarCarrito();
+    }
+    function inc(id){ add(id); }
+    function dec(id){
+      const idn = Number(id);
+      const it = carrito.get(idn);
+      if (!it) return;
+      it.cantidad = Number(it.cantidad) - 1;
+      if (it.cantidad <= 0) carrito.delete(idn);
+      persist(); pintarCarrito();
+    }
+    function del(id){
+      carrito.delete(Number(id)); persist(); pintarCarrito();
+    }
+    function vaciarCarritoConfirm(){
+      if (carrito.size === 0) return;
+      if (confirm('¿Estás seguro de vaciar el carrito?')) {
+        carrito.clear(); persist(); pintarCarrito();
+      }
+    }
+
+    /****** PAYPAL (sandbox) ******/
+    let paypalRenderedTotal = null;
+    function renderPayPal(total){
+      // No continúe si no está disponible el SDK
+      if (typeof paypal === 'undefined') return;
+      // Si no hay total, limpiar
+      if (!total || total <= 0) {
+        paypalRenderedTotal = null;
+        $.paypal.innerHTML = '';
+        return;
+      }
+      // Si ya se renderizó para mismo total, evitar re-render
+      if (paypalRenderedTotal === total && $.paypal.childElementCount > 0) return;
+      paypalRenderedTotal = total;
+      $.paypal.innerHTML = '';
+      paypal.Buttons({
+        style: { layout: 'vertical' },
+        createOrder: (data, actions) => {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: total.toFixed(2),
+                currency_code: MONEDA
+              },
+              description: "Compra en Dolcetto - Paula Roa"
+            }]
+          });
+        },
+        onApprove: (data, actions) => {
+          return actions.order.capture().then(function(details){
+            alert(`¡Pago aprobado! Gracias ${details.payer?.name?.given_name || 'cliente'}.`);
+            // vaciar carrito tras pago aprobado
+            carrito.clear(); persist(); pintarCarrito();
+          });
+        },
+        onError: (err) => {
+          console.error('PayPal error', err);
+          alert('Ocurrió un error con el pago. Intenta nuevamente.');
+        }
+      }).render('#paypal-button-container');
+    }
+
+    /****** EVENTOS (delegación) ******/
+    document.addEventListener('click', (e) => {
+      const addBtn = e.target.closest('[data-add]');
+      if (addBtn) { add(addBtn.dataset.add); return; }
+
+      const incBtn = e.target.closest('[data-inc]');
+      if (incBtn) { inc(incBtn.dataset.inc); return; }
+
+      const decBtn = e.target.closest('[data-dec]');
+      if (decBtn) { dec(decBtn.dataset.dec); return; }
+
+      const delBtn = e.target.closest('[data-del]');
+      if (delBtn) { del(delBtn.dataset.del); return; }
+
+      const viewBtn = e.target.closest('[data-view]');
+      if (viewBtn) {
+        const pid = Number(viewBtn.dataset.view);
+        const pd = productos.find(x=> x.id === pid);
+        if (pd) alert(pd.nombre + "\\n\\nPrecio: " + money.format(pd.precio));
+        return;
+      }
+    });
+
+    $.selectCat.addEventListener('change', filtrar);
+    $.btnResetFiltro.addEventListener('click', ()=>{ $.selectCat.value='todos'; filtrar(); });
+    $.btnVaciar.addEventListener('click', vaciarCarritoConfirm);
+    $.btnFinal.addEventListener('click', ()=> {
+      if (carrito.size === 0) return alert('El carrito está vacío. Agrega productos antes de finalizar.');
+      alert('Pedido confirmado (simulado). Gracias por tu compra 🎉');
+      carrito.clear(); persist(); pintarCarrito();
+    });
+
+    /****** INICIALIZACIÓN ******/
+    (function init(){
+      loadFiltro();
+      renderProductos(productos);
+      load(); // cargar carrito desde localStorage (si existe)
+      pintarCarrito();
+    })();
+
+    /****** NOTAS IMPORTANTES PARA TI (no modificar) ******/
+    // - Las imágenes y rutas se mantuvieron exactamente como las proveíste.
+    // - Si quieres probar pagos reales en sandbox: reemplaza "sb" en la URL del SDK por tu client-id de pruebas.
+    // - Para cambiar moneda: modificar MONEDA y el query del SDK (si usas PayPal). Algunas monedas no están soportadas por PayPal.
+    // - Para activar IVA: ajustar TAX_RATE (ej: 0.19).
+  </script>
+</body>
+</html>
